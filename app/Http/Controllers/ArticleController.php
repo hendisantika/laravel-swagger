@@ -123,11 +123,45 @@ class ArticleController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * @OA\Put(
+     *     path="/articles/{id}",
+     *     operationId="update",
+     *     tags={"Articles"},
+     *     summary="Update article in DB",
+     *     description="Update article in DB",
+     *     @OA\Parameter(name="id", in="path", description="Id of Article", required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *        required=true,
+     *        @OA\JsonContent(
+     *           required={"title", "content", "status"},
+     *           @OA\Property(property="title", type="string", format="string", example="Test Article Title"),
+     *           @OA\Property(property="content", type="string", format="string", example="This is a description for kodementor"),
+     *           @OA\Property(property="status", type="string", format="string", example="Published"),
+     *        ),
+     *     ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status_code", type="integer", example="200"),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
      */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $article = Article::updateOrCreate(['id' => $id], $request->only('title', 'content', 'status'));
+            DB::commit();
+            return response()->json(['status' => 200, 'data' => $article]);
+        } catch (Exception $e) {
+            DB::rollback();
+            return response()->json(['status' => 400, 'message' => $e->getMessage()]);
+        }
     }
 
     /**
