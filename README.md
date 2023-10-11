@@ -9,3 +9,9 @@
 5. Set your DB credentials
 6. Migrate the tables and seeder: `php artisan migrate --seed`
 7. Open your favorite browser: http://localhost:8000/swagger-ui
+
+### Image screen shot
+
+Swagger UI
+
+![Swagger UI](img/swagger.png "Swagger UI")
