@@ -165,18 +165,34 @@ class ArticleController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Delete(
+     *    path="/articles/{id}",
+     *    operationId="destroy",
+     *    tags={"Articles"},
+     *    summary="Delete Article",
+     *    description="Delete Article",
+     *    @OA\Parameter(name="id", in="path", description="Id of Article", required=true,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *    @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *         @OA\Property(property="status_code", type="integer", example="200"),
+     *         @OA\Property(property="data",type="object")
+     *          ),
+     *       )
+     *      )
+     *  )
      */
-    public function update(Request $request, string $id)
+    public function destroy($id)
     {
-        //
-    }
+        try {
+            Article::find($id)->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            return response()->json(['status' => 200, 'data' => []]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 400, 'message' => $e->getMessage()]);
+        }
     }
 }
