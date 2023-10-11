@@ -13,8 +13,8 @@ use Illuminate\Routing\Controller as BaseController;
  *     description="Articles API Documentation",
  *     @OA\Contact(
  *         name="Hendi Santika",
- *         email="hendisantika@yahoo.co.id"
- *         link="https://s.id/hendisantika"
+ *         email="hendisantika@yahoo.co.id",
+ *         url="https://s.id/hendisantika"
  *     ),
  *     @OA\License(
  *         name="Apache 2.0",
