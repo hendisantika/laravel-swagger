@@ -93,19 +93,33 @@ class ArticleController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Get(
+     *    path="/articles/{id}",
+     *    operationId="show",
+     *    tags={"Articles"},
+     *    summary="Get Article Detail",
+     *    description="Get Article Detail",
+     *    @OA\Parameter(name="id", in="path", description="Id of Article", required=true,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *          @OA\JsonContent(
+     *          @OA\Property(property="status_code", type="integer", example="200"),
+     *          @OA\Property(property="data",type="object")
+     *           ),
+     *        )
+     *       )
+     *  )
      */
-    public function store(Request $request)
+    public function show(Article $article)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        try {
+            return response()->json(['status' => 200, 'data' => $article]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 400, 'message' => $e->getMessage()]);
+        }
     }
 
     /**
