@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
@@ -52,11 +53,43 @@ class ArticleController extends Controller
 
 
     /**
-     * Show the form for creating a new resource.
+     * @OA\Post(
+     *      path="/articles",
+     *      operationId="store",
+     *      tags={"Articles"},
+     *      summary="Store article in DB",
+     *      description="Store article in DB",
+     *      @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *            required={"title", "content", "status"},
+     *            @OA\Property(property="title", type="string", format="string", example="Test Article Title"),
+     *            @OA\Property(property="content", type="string", format="string", example="This is a description for kodementor"),
+     *            @OA\Property(property="status", type="string", format="string", example="Published"),
+     *         ),
+     *      ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=""),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
      */
-    public function create()
+    public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $article = Article::create($request->only('title', 'content', 'status'));
+            DB::commit();
+
+            return response()->json(['status' => 201, 'data' => $article]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 400, 'message' => $e->getMessage()]);
+        }
     }
 
     /**
